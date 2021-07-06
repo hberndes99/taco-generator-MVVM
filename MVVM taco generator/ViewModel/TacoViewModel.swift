@@ -6,27 +6,28 @@
 //
 
 import Foundation
-
+/*
 protocol TacoVoewModelDelegate {
     func tacoToDisplayUpdated()
 }
-
+*/
 class TacoViewModel {
     var tacoToDisplay: Taco?
     var tacoTitle: String?
-    var delegate: TacoVoewModelDelegate?
+    //var delegate: TacoVoewModelDelegate?
     
     init() {
         
     }
     
     // would  this need to be weak self
-    func callForTaco() {
+    func callForTaco(completion: @escaping ((Taco) -> Void)) {
         NetworkManager.getRandomTaco { [weak self] taco in
             self?.tacoToDisplay = taco
             if let tacoToDisplay = self?.tacoToDisplay {
                 self?.tacoTitle = "\(tacoToDisplay.base_layer.name) with \(tacoToDisplay.mixin.name)"
-                self?.delegate?.tacoToDisplayUpdated()
+                //self?.delegate?.tacoToDisplayUpdated()
+                completion(tacoToDisplay)
             }
         }
     }
