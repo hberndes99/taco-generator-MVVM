@@ -17,22 +17,30 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
         viewModel = TacoViewModel()
-        viewModel?.delegate = self
         viewModel?.callForTaco()
-        baseLayerRecipeLabel.text = viewModel?.tacoToDisplay?.base_layer.recipe
-        mixinRecipeLabel.text = viewModel?.tacoToDisplay?.mixin.recipe
-        titleLabel.text = viewModel?.tacoTitle
+        viewModel?.tacoTitle?.bind { [weak self] title in
+            DispatchQueue.main.async {
+                self?.titleLabel.text = title
+            }
+        }
+        viewModel?.tacoToDisplay?.bind { [weak self] taco in
+            print("changed")
+            DispatchQueue.main.async {
+                self?.baseLayerRecipeLabel.text = taco.base_layer.recipe
+                self?.mixinRecipeLabel.text = taco.mixin.recipe
+            }
+        }
     }
 
     @IBAction func newTacoButton(_ sender: UIBarButtonItem) {
-        //print("new taco tapped")
         viewModel?.callForTaco()
     }
 
 }
 
+/*
 extension ViewController: TacoVoewModelDelegate {
     func tacoToDisplayUpdated() {
         DispatchQueue.main.async { [weak self] in
@@ -45,4 +53,4 @@ extension ViewController: TacoVoewModelDelegate {
         
     }
 }
-
+*/
